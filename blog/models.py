@@ -29,7 +29,8 @@ class Post(models.Model):
         choices=Status,
         default=Status.DRAFT
     )
-    tags = TaggableManager()
+    tags = TaggableManager(
+    )
     objects = models.Manager()
     published = PublishedManager()
 
