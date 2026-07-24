@@ -26,14 +26,14 @@ def post_list(request, tag_slug = None):
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
-    return render(request,'blog/post/list.html',{'posts': posts, 'tag':tag})
+    return render(request, 'blog/post/list.html', {'posts': posts, 'tag': tag})
 
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(
         Post,
         status=Post.Status.PUBLISHED,
-        slug = post,
-        publish__year = year,
+        slug=post,
+        publish__year=year,
         publish__month=month,
         publish__day=day,
     )
@@ -52,7 +52,8 @@ def post_detail(request, year, month, day, post):
         'form': form,
         'similar_posts': similar_posts
     }
-    return render(request,'blog/post/detail.html',context)
+    return render(request, 'blog/post/detail.html', context)
+
 
 # class PostListView(ListView):
 #     queryset = Post.published.all()
@@ -88,7 +89,7 @@ def post_share(request, post_id):
                 from_email=None,
                 recipient_list=[cd['to']]
             )
-            sent=True
+            sent = True
     else:
         form = EmailPostForm()
     context = {
@@ -96,7 +97,8 @@ def post_share(request, post_id):
         'form': form,
         'sent': sent
     }
-    return render(request,'blog/post/share.html',context)
+    return render(request, 'blog/post/share.html', context)
+
 
 @require_POST
 def post_comment(request, post_id):
@@ -115,8 +117,8 @@ def post_comment(request, post_id):
         'post': post,
         'form': form,
         'comment': comment
-        }
-    return render(request,'blog/post/comment.html',context)
+    }
+    return render(request, 'blog/post/comment.html', context)
 
 
 def post_search(request):
@@ -133,8 +135,8 @@ def post_search(request):
             results = (Post.published.annotate(similarity=TrigramSimilarity('title', query))
                        .filter(similarity__gt=0.1).order_by('-similarity'))
     context = {
-            'form': form,
-            'query': query,
-            'results': results
-        }
-    return render(request,'blog/post/search.html',context)
+        'form': form,
+        'query': query,
+        'results': results
+    }
+    return render(request, 'blog/post/search.html', context)
